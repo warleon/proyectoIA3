@@ -7,7 +7,7 @@ PSEUDOCODE:
 Given a dataset and a number of expected distributions K
 
 generate a list of K random Normal distributions with the mean being a random point in the dataset
-and all covariances being the sample covariances
+and all covariances being the dataset covariance
 and a list of K prior probabilities being 1/K
 
 Repeat until convergence of (prior,mean and covariance):
@@ -34,21 +34,34 @@ Repeat until convergence of (prior,mean and covariance):
 											(SUM from i=1 to N of (Yik))
 */
 
+#include <LU>
+#include <Dense>
 #include "common.h"
 
-typedef std::vector<std::vector<double>> Matrix;
+typedef Eigen::MatrixXd eMatrix;
+typedef Eigen::VectorXd epoint_t;
+typedef std::pair<epoint_t, eMatrix> Gausian;
+typedef epoint_t ProbList;
 
 class GMM
 {
-	pointVec dataset;
+	eMatrix dataset;
+	eMatrix Y;
 	size_t K;
+	std::vector<Gausian> gausians;
+	ProbList priors;
+
+	epoint_t YikXi(size_t);
+	eMatrix YikXi_Uk2(size_t);
 
 public:
-	static Matrix subMatrix(Matrix, size_t, size_t);
-	static double normal(point_t, point_t, Matrix);
-	static double det(Matrix);
+	double normal(epoint_t, epoint_t, eMatrix);
+	double p(epoint_t);
+	void E();
+	void M();
+	eMatrix covariance();
 
-	GMM(pointVec, size_t);
+	GMM(eMatrix, size_t);
 	void executeSecuencial();
 };
 

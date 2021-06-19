@@ -18,6 +18,17 @@ dataset_t getData(std::string path)
 	}
 	return ds;
 }
+eMatrix geteMatrix(std::string path)
+{
+	rapidcsv::Document doc(path);
+	eMatrix ds(doc.GetRowCount(), doc.GetColumnCount());
+	for (int i = 0; i < doc.GetRowCount(); i++)
+		for (int j = 0; j < doc.GetColumnCount(); j++)
+		{
+			ds(i, j) = doc.GetRow<double>(i)[j];
+		}
+	return ds;
+}
 
 int main()
 {
@@ -62,7 +73,6 @@ int main()
 	}
 
 	std::cout << "\n";
-*/
 	Matrix a =
 			{{1, 2, 4},
 			 {2, -1, 3},
@@ -78,6 +88,9 @@ int main()
 		std::cout << "\n";
 	}
 	std::cout << GMM::det(a) << "\n";
+*/
+	eMatrix dataset = geteMatrix("data/dataset.csv");
+	std::cout << dataset;
 
 	return 0;
 }
