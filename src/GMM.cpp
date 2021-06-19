@@ -85,7 +85,7 @@ epoint_t GMM::YikXi(size_t k)
 	auto temp = result;
 	for (size_t i = 0; i < N; i++)
 	{
-		temp = result + (mat.row(i) * this->Y(i, k));
+		temp = result + (mat.row(i).transpose() * this->Y(i, k));
 		result = temp;
 	}
 	return result;
@@ -101,8 +101,8 @@ eMatrix GMM::YikXi_Uk2(size_t k)
 
 	for (size_t i = 0; i < N; i++)
 	{
-		diff = mat.row(i) - this->gausians[k].first;
-		temp = result + this->Y(i, k) * diff * diff.transpose();
+		diff = mat.row(i).transpose() - this->gausians[k].first;
+		temp = result + (this->Y(i, k) * (diff * diff.transpose()));
 		result = temp;
 	}
 	return result;
@@ -131,5 +131,5 @@ void GMM::executeSecuencial()
 		M();
 		//build after
 		after = getMeans();
-	} while (before.isApprox(after));
+	} while (before.isApprox(after, 1));
 }
