@@ -90,7 +90,9 @@ int main()
 	std::cout << GMM::det(a) << "\n";
 */
 	eMatrix dataset = geteMatrix("data/dataset.csv");
-	std::cout << dataset;
+	GMM gmm(dataset, 7);
+	gmm.executeSecuencial();
+	std::cout << gmm.getMeans();
 
 	return 0;
 }

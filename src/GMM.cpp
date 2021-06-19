@@ -4,11 +4,15 @@ GMM::GMM(eMatrix ds, size_t k)
 {
 	this->K = k;
 	this->dataset = ds;
-	this->priors = ProbList(k, 1 / k);
+
+	this->priors = ProbList(k);
+	for (size_t i = 0; i < this->K; i++)
+		this->priors[i] = 1 / K;
+
 	this->gausians = std::vector<Gausian>(k);
 
 	std::default_random_engine generator;
-	std::uniform_int_distribution<int> distribution(0, ds.size() - 1);
+	std::uniform_int_distribution<int> distribution(0, ds.rows() - 1);
 
 	eMatrix cov = covariance();
 	for (auto &pair : this->gausians)
@@ -104,6 +108,28 @@ eMatrix GMM::YikXi_Uk2(size_t k)
 	return result;
 }
 
+eMatrix GMM::getMeans()
+{
+	size_t N = this->dataset.cols();
+	eMatrix means(this->K, N);
+	for (size_t i = 0; i < this->K; i++)
+		for (size_t j = 0; j < N; j++)
+			means(i, j) = this->gausians[i].first[j];
+
+	return means;
+}
 void GMM::executeSecuencial()
 {
+	size_t N = this->dataset.cols();
+	eMatrix before(this->K, N), after(this->K, N);
+
+	do
+	{
+		//build before
+		before = getMeans();
+		E();
+		M();
+		//build after
+		after = getMeans();
+	} while (before.isApprox(after));
 }

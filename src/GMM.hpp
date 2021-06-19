@@ -60,6 +60,7 @@ public:
 	void E();
 	void M();
 	eMatrix covariance();
+	eMatrix getMeans();
 
 	GMM(eMatrix, size_t);
 	void executeSecuencial();
