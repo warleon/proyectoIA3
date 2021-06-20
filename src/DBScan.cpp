@@ -40,6 +40,9 @@ void DBScan::singlePointDBScan(DBScan *self, pointAndCluster *p1)
 
   for (auto &i : path)
     self->auxiliarDataSet[i].second = center;
+
+  if (std::find(self->clusters.begin(), self->clusters.end(), center) == self->clusters.end())
+    self->clusters.push_back(center);
 }
 
 void DBScan::executeSecuencial()
@@ -48,4 +51,15 @@ void DBScan::executeSecuencial()
   {
     DBScan::singlePointDBScan(this, &auxiliarDataSet[i]);
   }
+}
+int DBScan::getCluster(point_t p)
+{
+  size_t n = this->dataset.nearest_index(p);
+  point_t cluster = this->auxiliarDataSet[n].second;
+  for (size_t i = 0; i < this->clusters.size(); i++)
+  {
+    if (cluster == this->clusters[i])
+      return i;
+  }
+  return -1;
 }

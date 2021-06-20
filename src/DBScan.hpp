@@ -38,6 +38,7 @@ class DBScan
   size_t min;
   Radius r;
   KDTree dataset;
+  std::vector<point_t> clusters;
 
   static void singlePointDBScan(DBScan *, pointAndCluster *);
 
@@ -46,5 +47,6 @@ public:
 
   DBScan(const pointVec &, const Radius &, size_t);
   void executeSecuencial();
+  int getCluster(point_t);
 };
 #endif

@@ -10,6 +10,7 @@
 #include <set>
 #include <assert.h>
 #include <cmath>
+#include <algorithm>
 #include "KDTree.hpp"
 #include "rapidcsv.h"
 
