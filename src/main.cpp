@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include "lib/allDependencies.h"
 #include "DBScan.hpp"
@@ -32,6 +33,8 @@ eMatrix geteMatrix(std::string path)
 
 int main()
 {
+	std::ofstream output;
+
 	auto ds = getData("data/dataset.csv");
 	for (auto &it : ds[0])
 	{
@@ -39,11 +42,42 @@ int main()
 	}
 	std::cout << "\nafter train\n";
 
-	auto dbscan = DBScan(ds, 20, 8);
+	auto dbscan = DBScan(ds, 20, 5);
 	dbscan.executeSecuencial();
+	output.open("results/dbscan.csv");
+	output << "index,"
+				 << "dim1,"
+				 << "dim2,"
+				 << "cluster"
+				 << "\n";
+	for (size_t i = 0; i < dbscan.auxiliarDataSet.size(); i++)
+	{
+		output << i << ","
+					 << dbscan.auxiliarDataSet[i].first[0] << ","
+					 << dbscan.auxiliarDataSet[i].first[1] << ","
+					 << dbscan.getClusterIndex(dbscan.auxiliarDataSet[i].second)
+					 << "\n";
+	}
+
+	output.close();
 
 	Kmeans kmeans(ds, 7);
 	kmeans.executeSecuencial();
+	output.open("results/kmeans.csv");
+	output << "index,"
+				 << "dim1,"
+				 << "dim2,"
+				 << "cluster"
+				 << "\n";
+	for (size_t i = 0; i < kmeans.dataSet.size(); i++)
+	{
+		output << i << ","
+					 << kmeans.dataSet[i][0] << ","
+					 << kmeans.dataSet[i][1] << ","
+					 << kmeans.closestCentroid(kmeans.dataSet[i])
+					 << "\n";
+	}
+	output.close();
 
 	/*
 	eMatrix dataset = geteMatrix("data/dataset.csv");

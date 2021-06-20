@@ -24,13 +24,13 @@ class Kmeans
 	size_t K;
 	pointVec centroids;
 	Clusters clusters;
-	pointVec dataSet;
 
 	void resetClusters();
 	void assignCluster(point_t);
 	void computeCentroids();
 
 public:
+	pointVec dataSet;
 	Kmeans(const pointVec &, size_t);
 	size_t closestCentroid(point_t);
 	void executeSecuencial();

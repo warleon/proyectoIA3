@@ -52,13 +52,17 @@ void DBScan::executeSecuencial()
     DBScan::singlePointDBScan(this, &auxiliarDataSet[i]);
   }
 }
-int DBScan::getCluster(point_t p)
+int DBScan::getClusterOf(point_t p)
 {
   size_t n = this->dataset.nearest_index(p);
   point_t cluster = this->auxiliarDataSet[n].second;
+  return getClusterIndex(cluster);
+}
+int DBScan::getClusterIndex(point_t c)
+{
   for (size_t i = 0; i < this->clusters.size(); i++)
   {
-    if (cluster == this->clusters[i])
+    if (c == this->clusters[i])
       return i;
   }
   return -1;

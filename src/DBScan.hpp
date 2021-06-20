@@ -47,6 +47,7 @@ public:
 
   DBScan(const pointVec &, const Radius &, size_t);
   void executeSecuencial();
-  int getCluster(point_t);
+  int getClusterOf(point_t);
+  int getClusterIndex(point_t);
 };
 #endif
